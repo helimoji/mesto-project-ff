@@ -1,46 +1,47 @@
-import {createCard, likeCard, deleteCard} from '../components/cards.js';
+import {createCard, likeCard, deleteCard} from '../components/card.js';
+
+function escClose(evt) {
+    if (evt.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_is-opened');
+        closePopup(openedPopup);
+    }
+}
+
+function openPopup(popup) {
+    popup.classList.add('popup_is-opened');
+    document.addEventListener('keydown', escClose);
+}
+
+function closePopup(popup) {
+    popup.classList.remove('popup_is-opened');
+    document.removeEventListener('keydown', escClose);
+}
+
+const popups = document.querySelectorAll('.popup'); 
+
+popups.forEach((popup) => {
+popup.addEventListener('click', (evt) => {
+if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close-button')){
+closePopup(popup);
+}
+});
+});
 
 function cardPopup(cardData) {
     const popupSomeCard = document.querySelector('.popup_type_image');
     const popupImage = document.querySelector('.popup__image');
     const popupCaption = document.querySelector('.popup__caption');
+    const closeCard = document.querySelector('.popup_type_image .popup__close');
   
     popupImage.src = cardData.link;
     popupImage.alt = cardData.name;
     popupCaption.textContent = cardData.name;
     
-    popupSomeCard.classList.add('popup_is-opened')
-    
-    const closeCard = document.querySelector('.popup_type_image .popup__close');
-  
-    popupFunctional(popupImage, popupSomeCard, closeCard)
+    popupImage.addEventListener('click', openPopup(popupSomeCard))
+    closeCard.addEventListener('click', closePopup(popupSomeCard))
   }
 
-  function popupFunctional (button, popup, closePopup) {
-    button.addEventListener('click', () => {
-        popup.classList.add('popup_is-opened')
-    })
 
-    function popupClose() {
-        popup.classList.remove('popup_is-opened') 
-    }
-
-    closePopup.addEventListener('click', popupClose)
-
-    document.addEventListener('keydown', (evt) => {
-        if (evt.key === 'Escape') {
-            popupClose()
-        }
-    })
-
-    popup.addEventListener('click', (evt) => {
-        const isOverlayClick = evt.target.classList.contains('popup');
-
-        if (isOverlayClick) {
-            popupClose();
-        }
-    });
-}
 
 const popupEdit = document.querySelector('.popup_type_edit');
 const nameInput = document.querySelector('.popup__input_type_name')
@@ -52,17 +53,19 @@ const profileDescription = document.querySelector('.profile__description')
 nameInput.value = profileTitle.textContent;
 jobInput.value = profileDescription.textContent;
 
-function handleFormSubmit(evt) {
+function changeProfFormSubmit(evt) {
     evt.preventDefault(); 
+
     const name = nameInput.value
     const job = jobInput.value
 
     profileTitle.textContent = name;
     profileDescription.textContent = job;
-   
-    popupEdit.classList.remove('popup_is-opened')
+    
+    closePopup(popupEdit)
 }
 
+const newPlaceForm = document.querySelector("[name='new-place']")
 const newCardPopup = document.querySelector('.popup_type_new-card');
 const placesList = document.querySelector('.places__list');
 const cardNameInput = document.querySelector('.popup__input_type_card-name')
@@ -81,10 +84,9 @@ function addCard(evt) {
   
   placesList.prepend(newCard);
   
-  newCardPopup.classList.remove('popup_is-opened')
+  closePopup(newCardPopup)
   
-  cardUrlInput.value = '';
-  cardNameInput.value ='';
+  newPlaceForm.reset()
 }
 
-  export {cardPopup, popupFunctional, handleFormSubmit, addCard}
+  export {openPopup, closePopup, cardPopup, changeProfFormSubmit, addCard}

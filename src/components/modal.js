@@ -21,7 +21,7 @@ const popups = document.querySelectorAll('.popup');
 
 popups.forEach((popup) => {
 popup.addEventListener('click', (evt) => {
-if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close-button')){
+if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')){
 closePopup(popup);
 }
 });
@@ -31,14 +31,12 @@ function cardPopup(cardData) {
     const popupSomeCard = document.querySelector('.popup_type_image');
     const popupImage = document.querySelector('.popup__image');
     const popupCaption = document.querySelector('.popup__caption');
-    const closeCard = document.querySelector('.popup_type_image .popup__close');
   
     popupImage.src = cardData.link;
     popupImage.alt = cardData.name;
     popupCaption.textContent = cardData.name;
     
-    popupImage.addEventListener('click', openPopup(popupSomeCard))
-    closeCard.addEventListener('click', closePopup(popupSomeCard))
+    openPopup(popupSomeCard)
   }
 
 

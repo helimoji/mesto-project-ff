@@ -1,20 +1,24 @@
 import {createCard, likeCard, deleteCard} from '../components/card.js';
 
 function escClose(evt) {
-    if (evt.key === 'Escape') {
-        const openedPopup = document.querySelector('.popup_is-opened');
-        closePopup(openedPopup);
-    }
+  if (evt.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_is-opened');
+    closePopup(openedPopup);
+    closeResetFormPopup(newPlaceForm);
+  }
 }
 
 function openPopup(popup) {
-    popup.classList.add('popup_is-opened');
-    document.addEventListener('keydown', escClose);
+  popup.classList.add('popup_is-opened');
+  document.addEventListener('keydown', escClose);
 }
 
 function closePopup(popup) {
-    popup.classList.remove('popup_is-opened');
-    document.removeEventListener('keydown', escClose);
+  popup.classList.remove('popup_is-opened');
+  document.removeEventListener('keydown', escClose); 
+}
+function closeResetFormPopup(form) {
+  form.reset()
 }
 
 const popups = document.querySelectorAll('.popup'); 
@@ -23,6 +27,7 @@ popups.forEach((popup) => {
 popup.addEventListener('click', (evt) => {
 if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')){
 closePopup(popup);
+closeResetFormPopup(newPlaceForm);
 }
 });
 });
@@ -84,7 +89,8 @@ function addCard(evt) {
   
   closePopup(newCardPopup)
   
-  newPlaceForm.reset()
+  newPlaceForm.reset() 
 }
+
 
   export {openPopup, closePopup, cardPopup, changeProfFormSubmit, addCard}

@@ -1,15 +1,11 @@
 import './pages/index.css';
-import {createCard, likeCard, deleteCard} from './components/card.js'
-import {initialCards} from './components/cards.js'
-import {openPopup, cardPopup, changeProfFormSubmit, addCard} from './components/modal.js';
+import {openPopup, changeProfFormSubmit, addCard, newAvatar, changeAvatarFormSubmit} from './components/modal.js';
 import {clearValidation, enableValidation} from './components/validation.js'
+import {profImage, editAvatarForm} from './components/modal.js';
 
-const placesList = document.querySelector('.places__list');
 
-initialCards.forEach((item) => {
-    const newCard = createCard(item, deleteCard, likeCard, cardPopup);
-    placesList.append(newCard);
-})
+profImage.addEventListener('click', newAvatar)
+editAvatarForm.addEventListener('submit', changeAvatarFormSubmit)
 
 const chageProfButton = document.querySelector('.profile__edit-button');
 const popupEdit = document.querySelector('.popup_type_edit');
@@ -18,7 +14,7 @@ chageProfButton.addEventListener('click', () => {
     openPopup(popupEdit);
     nameInput.value = profileTitle.textContent;
     jobInput.value = profileDescription.textContent;
-    clearValidation(editProfileForm)
+    clearValidation(editProfileForm);
 })
 
 const addCardButton = document.querySelector('.profile__add-button');
@@ -36,6 +32,7 @@ const jobInput = document.querySelector('.popup__input_type_description')
 const profileTitle = document.querySelector('.profile__title')
 const profileDescription = document.querySelector('.profile__description')
 
+editProfileForm.addEventListener('submit', changeProfData);
 editProfileForm.addEventListener('submit', changeProfFormSubmit);
 
 const newPlaceForm = document.querySelector("[name='new-place']")
@@ -43,3 +40,8 @@ const newPlaceForm = document.querySelector("[name='new-place']")
 newPlaceForm.addEventListener('submit', addCard)
 
 enableValidation()
+
+// API
+import {getProfileData, getinitialCard, changeProfData} from './components/api.js'
+getProfileData();
+getinitialCard();

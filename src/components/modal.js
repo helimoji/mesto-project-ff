@@ -1,4 +1,5 @@
 import {createCard, likeCard, deleteCard} from '../components/card.js';
+import {addNewCard, changeAvatar, renderLoading} from '../components/api.js'
 
 function escClose(evt) {
   if (evt.key === 'Escape') {
@@ -45,7 +46,7 @@ function cardPopup(cardData) {
   }
 
 
-
+  
 const popupEdit = document.querySelector('.popup_type_edit');
 const nameInput = document.querySelector('.popup__input_type_name')
 const jobInput = document.querySelector('.popup__input_type_description')
@@ -57,6 +58,7 @@ nameInput.value = profileTitle.textContent;
 jobInput.value = profileDescription.textContent;
 
 function changeProfFormSubmit(evt) {
+    renderLoading(true);
     evt.preventDefault(); 
 
     const name = nameInput.value
@@ -76,21 +78,43 @@ const cardUrlInput = document.querySelector('.popup__input_type_url')
 
 
 function addCard(evt) {
+  renderLoading(true);
   evt.preventDefault();
   
   let newCardData = {
     name: cardNameInput.value,
     link: cardUrlInput.value 
   }
-    
+
   let newCard = createCard(newCardData, deleteCard, likeCard, cardPopup)
+  
+  addNewCard(newCardData)
   
   placesList.prepend(newCard);
   
   closePopup(newCardPopup)
-  
+
   newPlaceForm.reset() 
 }
 
+const AvatarPopup = document.querySelector('.popup_type_avatar');
+const newAvatarInput = document.querySelector('.popup__input_type_avatar');
+const profImage= document.querySelector('.profile__image')
+const editAvatarForm = document.querySelector("[name='edit-avatar']")
 
-  export {openPopup, closePopup, cardPopup, changeProfFormSubmit, addCard}
+export {profImage, editAvatarForm}
+
+function newAvatar() {
+  openPopup(AvatarPopup)
+}
+
+function changeAvatarFormSubmit() {
+  renderLoading(true);
+  const AvatarValue = newAvatarInput.value
+  profImage.style.backgroundImage = `url(${AvatarValue})`
+  closePopup(AvatarPopup)
+  changeAvatar(AvatarValue)
+  editAvatarForm.reset()
+}
+
+  export {openPopup, closePopup, cardPopup, changeProfFormSubmit, addCard, newAvatar, changeAvatarFormSubmit}

@@ -7,11 +7,11 @@ import {
   changeAvatarFormSubmit,
   resetForm,
   cardPopup,
+  renderLoading,
 } from "./components/modal.js";
 import {
   clearValidation,
   enableValidation,
-  renderLoading,
 } from "./components/validation.js";
 import {
   getProfileData,
@@ -77,6 +77,7 @@ profImage.addEventListener("click", () => {
 
 editAvatarForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  renderLoading(true, saveNewAvatar);
   const AvatarValue = newAvatarInput.value;
   changeAvatar(AvatarValue)
     .then(() => {
@@ -100,6 +101,7 @@ chageProfButton.addEventListener("click", () => {
 
 editProfileForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  renderLoading(true, saveEditProf);
   const newName = nameInput.value;
   const newAbout = jobInput.value;
   changeProfData(newName, newAbout)
@@ -124,6 +126,7 @@ addCardButton.addEventListener("click", () => {
 
 newPlaceForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  renderLoading(true, saveNewPlase);
   const newCardData = {
     name: cardNameInput.value,
     link: cardUrlInput.value,

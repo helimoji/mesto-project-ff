@@ -1,4 +1,3 @@
-import { renderLoading } from "../components/validation.js";
 import {
   popups,
   popupEdit,
@@ -58,14 +57,12 @@ function cardPopup(cardData) {
 }
 
 function changeProfFormSubmit() {
-  renderLoading(true, saveEditProf);
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
   closePopup(popupEdit)
 }
 
 function addCard() {
-  renderLoading(true, saveNewPlase);
   closePopup(newCardPopup);
   newPlaceForm.reset();
 }
@@ -75,10 +72,17 @@ function newAvatar() {
 }
 
 function changeAvatarFormSubmit() {
-  renderLoading(true, saveNewAvatar);
   closePopup(AvatarPopup);
   editAvatarForm.reset();
 }
+
+function renderLoading(isLoading, button) {
+  if (isLoading) {
+      button.textContent = "Сохранение...";
+  } else {
+      button.textContent = "Сохранить";
+  }
+};
 
 export {
   openPopup,
@@ -89,4 +93,5 @@ export {
   addCard,
   newAvatar,
   changeAvatarFormSubmit,
+  renderLoading
 };

@@ -12,9 +12,6 @@ import {
   popupSomeCard,
   popupImage,
   popupCaption,
-  saveEditProf,
-  saveNewPlase,
-  saveNewAvatar
 } from "./constant.js";
 
 function escClose(evt) {

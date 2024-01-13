@@ -1,4 +1,3 @@
-//index
 const chageProfButton = document.querySelector(".profile__edit-button");
 const addCardButton = document.querySelector(".profile__add-button");
 const editProfileForm = document.querySelector("[name='edit-profile']");

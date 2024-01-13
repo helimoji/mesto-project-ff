@@ -1,120 +1,92 @@
-import {createCard, likeCard, deleteCard} from '../components/card.js';
-import {addNewCard, changeAvatar, renderLoading} from '../components/api.js'
+import { renderLoading } from "../components/validation.js";
+import {
+  popups,
+  popupEdit,
+  nameInput,
+  jobInput,
+  profileTitle,
+  profileDescription,
+  newPlaceForm,
+  newCardPopup,
+  AvatarPopup,
+  editAvatarForm,
+  popupSomeCard,
+  popupImage,
+  popupCaption,
+  saveEditProf,
+  saveNewPlase,
+  saveNewAvatar
+} from "./constant.js";
 
 function escClose(evt) {
-  if (evt.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_is-opened');
+  if (evt.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
     closePopup(openedPopup);
-    closeResetFormPopup(newPlaceForm);
   }
 }
 
 function openPopup(popup) {
-  popup.classList.add('popup_is-opened');
-  document.addEventListener('keydown', escClose);
+  popup.classList.add("popup_is-opened");
+  document.addEventListener("keydown", escClose);
 }
 
 function closePopup(popup) {
-  popup.classList.remove('popup_is-opened');
-  document.removeEventListener('keydown', escClose); 
-}
-function closeResetFormPopup(form) {
-  form.reset()
+  popup.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", escClose);
 }
 
-const popups = document.querySelectorAll('.popup'); 
+function resetForm(form) {
+  form.reset();
+}
 
 popups.forEach((popup) => {
-popup.addEventListener('click', (evt) => {
-if (evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')){
-closePopup(popup);
-closeResetFormPopup(newPlaceForm);
-}
-});
+  popup.addEventListener("click", (evt) => {
+    if (
+      evt.target === evt.currentTarget ||
+      evt.target.classList.contains("popup__close")
+    ) {
+      closePopup(popup);
+    }
+  });
 });
 
 function cardPopup(cardData) {
-    const popupSomeCard = document.querySelector('.popup_type_image');
-    const popupImage = document.querySelector('.popup__image');
-    const popupCaption = document.querySelector('.popup__caption');
-  
-    popupImage.src = cardData.link;
-    popupImage.alt = cardData.name;
-    popupCaption.textContent = cardData.name;
-    
-    openPopup(popupSomeCard)
-  }
-
-
-  
-const popupEdit = document.querySelector('.popup_type_edit');
-const nameInput = document.querySelector('.popup__input_type_name')
-const jobInput = document.querySelector('.popup__input_type_description')
-
-const profileTitle = document.querySelector('.profile__title')
-const profileDescription = document.querySelector('.profile__description')
-
-nameInput.value = profileTitle.textContent;
-jobInput.value = profileDescription.textContent;
-
-function changeProfFormSubmit(evt) {
-    renderLoading(true);
-    evt.preventDefault(); 
-
-    const name = nameInput.value
-    const job = jobInput.value
-
-    profileTitle.textContent = name;
-    profileDescription.textContent = job;
-    
-    closePopup(popupEdit)
+  popupImage.src = cardData.link;
+  popupImage.alt = cardData.name;
+  popupCaption.textContent = cardData.name;
+  openPopup(popupSomeCard);
 }
 
-const newPlaceForm = document.querySelector("[name='new-place']")
-const newCardPopup = document.querySelector('.popup_type_new-card');
-const placesList = document.querySelector('.places__list');
-const cardNameInput = document.querySelector('.popup__input_type_card-name')
-const cardUrlInput = document.querySelector('.popup__input_type_url')
-
-
-function addCard(evt) {
-  renderLoading(true);
-  evt.preventDefault();
-  
-  let newCardData = {
-    name: cardNameInput.value,
-    link: cardUrlInput.value 
-  }
-
-  let newCard = createCard(newCardData, deleteCard, likeCard, cardPopup)
-  
-  addNewCard(newCardData)
-  
-  placesList.prepend(newCard);
-  
-  closePopup(newCardPopup)
-
-  newPlaceForm.reset() 
+function changeProfFormSubmit() {
+  renderLoading(true, saveEditProf);
+  profileTitle.textContent = nameInput.value;
+  profileDescription.textContent = jobInput.value;
+  closePopup(popupEdit)
 }
 
-const AvatarPopup = document.querySelector('.popup_type_avatar');
-const newAvatarInput = document.querySelector('.popup__input_type_avatar');
-const profImage= document.querySelector('.profile__image')
-const editAvatarForm = document.querySelector("[name='edit-avatar']")
-
-export {profImage, editAvatarForm}
+function addCard() {
+  renderLoading(true, saveNewPlase);
+  closePopup(newCardPopup);
+  newPlaceForm.reset();
+}
 
 function newAvatar() {
-  openPopup(AvatarPopup)
+  openPopup(AvatarPopup);
 }
 
 function changeAvatarFormSubmit() {
-  renderLoading(true);
-  const AvatarValue = newAvatarInput.value
-  profImage.style.backgroundImage = `url(${AvatarValue})`
-  closePopup(AvatarPopup)
-  changeAvatar(AvatarValue)
-  editAvatarForm.reset()
+  renderLoading(true, saveNewAvatar);
+  closePopup(AvatarPopup);
+  editAvatarForm.reset();
 }
 
-  export {openPopup, closePopup, cardPopup, changeProfFormSubmit, addCard, newAvatar, changeAvatarFormSubmit}
+export {
+  openPopup,
+  closePopup,
+  cardPopup,
+  resetForm,
+  changeProfFormSubmit,
+  addCard,
+  newAvatar,
+  changeAvatarFormSubmit,
+};

@@ -1,47 +1,149 @@
-import './pages/index.css';
-import {openPopup, changeProfFormSubmit, addCard, newAvatar, changeAvatarFormSubmit} from './components/modal.js';
-import {clearValidation, enableValidation} from './components/validation.js'
-import {profImage, editAvatarForm} from './components/modal.js';
+import "./pages/index.css";
+import {
+  openPopup,
+  changeProfFormSubmit,
+  addCard,
+  newAvatar,
+  changeAvatarFormSubmit,
+  resetForm,
+  cardPopup,
+} from "./components/modal.js";
+import {
+  clearValidation,
+  enableValidation,
+  renderLoading,
+} from "./components/validation.js";
+import {
+  getProfileData,
+  getinitialCard,
+  changeProfData,
+  addNewCard,
+  changeAvatar,
+} from "./components/api.js";
+import {
+  validationConfig,
+  chageProfButton,
+  popupEdit,
+  addCardButton,
+  newCardPopup,
+  editProfileForm,
+  nameInput,
+  jobInput,
+  profileTitle,
+  profileDescription,
+  cardNameInput,
+  cardUrlInput,
+  newPlaceForm,
+  profImage,
+  editAvatarForm,
+  placesList,
+  newAvatarInput,
+  saveEditProf,
+  saveNewPlase,
+  saveNewAvatar,
+} from "./components/constant.js";
+import { createCard, likeCard, deleteCard } from "./components/card.js";
 
+enableValidation(validationConfig);
 
-profImage.addEventListener('click', newAvatar)
-editAvatarForm.addEventListener('submit', changeAvatarFormSubmit)
+let profileId;
+Promise.all([getProfileData(), getinitialCard()])
+  .then(([userData, cardsData]) => {
+    profileId = userData._id;
+    profileTitle.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    profImage.style.backgroundImage = `url(${userData.avatar})`;
 
-const chageProfButton = document.querySelector('.profile__edit-button');
-const popupEdit = document.querySelector('.popup_type_edit');
+    cardsData.forEach((card) => {
+      const someCard = createCard(
+        card,
+        deleteCard,
+        likeCard,
+        cardPopup,
+        profileId
+      );
+      placesList.append(someCard);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-chageProfButton.addEventListener('click', () => {
-    openPopup(popupEdit);
-    nameInput.value = profileTitle.textContent;
-    jobInput.value = profileDescription.textContent;
-    clearValidation(editProfileForm);
-})
+profImage.addEventListener("click", () => {
+  resetForm(editAvatarForm);
+  newAvatar();
+  clearValidation(validationConfig, editAvatarForm);
+});
 
-const addCardButton = document.querySelector('.profile__add-button');
-const newCardPopup = document.querySelector('.popup_type_new-card');
+editAvatarForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  const AvatarValue = newAvatarInput.value;
+  changeAvatar(AvatarValue)
+    .then(() => {
+      profImage.style.backgroundImage = `url(${AvatarValue})`;
+      changeAvatarFormSubmit();
+    })
+    .finally(() => {
+      renderLoading(false, saveNewAvatar);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
-addCardButton.addEventListener('click', () => {
-    openPopup(newCardPopup);
-    clearValidation(newPlaceForm)
-})
+chageProfButton.addEventListener("click", () => {
+  openPopup(popupEdit);
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+  clearValidation(validationConfig, editProfileForm);
+});
 
-const editProfileForm = document.querySelector("[name='edit-profile']")
-const nameInput = document.querySelector('.popup__input_type_name')
-const jobInput = document.querySelector('.popup__input_type_description')
+editProfileForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  const newName = nameInput.value;
+  const newAbout = jobInput.value;
+  changeProfData(newName, newAbout)
+    .then(() => {
+      profileTitle.textContent = newName;
+      profileDescription.textContent = jobInput.value;
+      changeProfFormSubmit();
+    })
+    .finally(() => {
+      renderLoading(false, saveEditProf);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
-const profileTitle = document.querySelector('.profile__title')
-const profileDescription = document.querySelector('.profile__description')
+addCardButton.addEventListener("click", () => {
+  resetForm(newPlaceForm);
+  openPopup(newCardPopup);
+  clearValidation(validationConfig, newPlaceForm);
+});
 
-editProfileForm.addEventListener('submit', changeProfData);
-editProfileForm.addEventListener('submit', changeProfFormSubmit);
-
-const newPlaceForm = document.querySelector("[name='new-place']")
-
-newPlaceForm.addEventListener('submit', addCard)
-
-enableValidation()
-
-// API
-import {getProfileData, getinitialCard, changeProfData} from './components/api.js'
-getProfileData();
-getinitialCard();
+newPlaceForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  const newCardData = {
+    name: cardNameInput.value,
+    link: cardUrlInput.value,
+  };
+  addNewCard(newCardData)
+    .then((card) => {
+      const newCard = createCard(
+        card,
+        deleteCard,
+        likeCard,
+        cardPopup,
+        profileId
+      );
+      placesList.prepend(newCard);
+      addCard();
+    })
+    .finally(() => {
+      renderLoading(false, saveNewPlase);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
